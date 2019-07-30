@@ -1,0 +1,48 @@
+A middleware or middleware function in ExpressJS is simply a function that returns a response to the client or passes control onto another middleware function.
+
+In express there is something called the "Request Processing Pipeline." It's a kind of way whereby requests are being processed, like a method, a process of doing things. An Api is all about receiving a request and returning a response, the means by which these request and response cycle go through is the "Request Processing Pipeline." A middleware as the name implies stands in the middle of a request and a response, when a request is made the middleware function takes the request and works on it, if it's job completes the request it then returns a response but if it's job doesn't complete the request, after it's performed it's duty it passes it unto the next middleware function that continues it's job on the request until the request is complete and a response is served to the client, thereby terminating the request-response cycle.
+
+Eg: request -> middleware -> middleware -> response
+    OR
+    request -> middleware -> response
+    OR 
+    request -> middleware * 3 * 5 * 10 etc -> response
+
+Let's give a real-world example: I go to an eatery, I make a request for eggs and potato, the waiter which happens to be a middleware (standing between your request and the response, he either returns the meal instantly or passes control to someone who would) takes the order (request) to the cook in the kitchen(who happens to be another middleware that makes your meal), after making the meal, the cook passes control to the waiter i.e the cook gives your meal to the waiter (a middleware) who finally brings it to you (he returns a response to the client being you) thereby ending the whole request-response cycle. The whole process of making an order and getting your meal (making a request and getting a response) goes through the "Request Processing Pipeline." Here is what the "Request Processing Pipeline" looks like below:
+
+  Order Meal (Request) -> Waiter -> Kitchen -> Waiter -> Meal Served (Response)
+  Everything between the Request and Response is a middleware.
+
+
+##########################################################################################################################
+
+In ExpressJS there are three types of middleware that you can work with:
+* A built-in middleware, of which there are three of them: json(), urlencoded() and static().
+* A custom middleware, this is a middleware you created and 
+* A third-party middleware, this is a middleware function created by other developers available in the expressJs registry that you can easily download via npm and use in your projects. Eg: Morgan.
+
+HOW TO CREATE A CUSTOM MIDDLEWARE
+=================================
+
+function nameOfMiddleware(req, res, next){
+  some js code;
+  next();
+}
+
+You would usually create a middleware in it's own module and then export it.
+
+Like so: module.exports = nameOfMiddleware;
+
+HOW TO USE A MIDDLEWARE IN YOUR API
+===================================
+
+const express = require('express');
+const app = express();
+const morgan = require('morgan');
+const myCustomMiddleware = require('./nameOfMiddleware');
+
+app.use(express.json()); //this is a built-in express middleware
+app.use(myCustomMiddleware); //this is your custom middleware
+app.use(morgan()); //this is a third-party middleware
+
+
