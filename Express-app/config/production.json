@@ -1,0 +1,6 @@
+{
+  "name": "Express-app-prod",
+  "mail_server": {
+    "host": "Befe-server-prod"
+  }
+}
