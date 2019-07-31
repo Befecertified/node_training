@@ -1,11 +1,27 @@
 const Joi = require("joi");
-const logger = require("./logger");
+const morgan = require("morgan");
+const config = require("config");
+const app_debug = require("debug")("app:code");
+const db_debug = require("debug")("app:db");
 const express = require("express");
 const app = express();
+const logger = require("./logger");
 
 app.use(express.json());
 app.use(express.static("public"));
-app.use(logger);
+
+
+if(app.get('env') === "development"){
+  app.use(logger);
+  app.use(morgan('tiny'));
+}
+
+app_debug(`Env: ${app.get('env')}`);
+
+app_debug(`${config.get('name')}`);
+db_debug(`${config.get('mail_server.host')}`);
+db_debug(`${config.get('mail_server.password')}`);
+
 
 const courses = [
   { id: 1, name: "Intro to Programming." },
