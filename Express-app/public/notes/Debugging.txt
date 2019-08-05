@@ -1,0 +1,40 @@
+The console.log() function is our best friend as JS developers, why? Because we use it to quickly debug our code, to quickly log a response on our console, to see where there might be a problem. Debugging is the act of checking for errors in your code and removing them, and console.log() is what we use most time to check our code. But there is a down side to using console.log() for debugging, one being that when it's time to deploy code to production, we usually delete or comment them out. Now imagine where your code has spanned so many lines and you have to delete or comment out so many console.logs and when you need them again you have to retype or uncomment them out again? Yuck! That's very tedious and unproductive, with nodeJS that doesn't have to be so, because there is a third-party package called "debug" which we can use to debug our codes, we can use it like the console.log() to log debug messages on our console unless that it's cleaner with much better controls (this is one of the benefits of being a nodeJS dev as there is a package for almost anything you might need).
+
+npm i debug
+
+Now we would replace all console.logs using our debug package and all we have to do is set an environment variable to turn on debugging then we can see the debugging messages on our console and when we turn off debugging the messages don't appear on our console, all this we do outside of our code. Let me show you how to use this package and what I mean by all these.
+
+Make sure to install the package and include it at the top of your code, like so:
+
+const debug = require('debug')('app:debug') 
+//the debug module returns a function which takes an argument('app:debug') that acts as a namespace (only debug messages under this namespace would be displayed).
+
+now we run:
+
+debug("Testing our debugger");
+
+to display this on our console we have to set an environment variable, now head over to terminal or cmd:
+
+cmd: set DEBUG=namespace ie set DEBUG=app:debug
+terminal: export DEBUG=namespace ie export DEBUG=app:debug
+
+Now run:
+
+node index.js
+
+We can now see "Testing our debugger" on the console, to turn it off we simply 
+
+set DEBUG=
+
+Run the code again and we see nothing on our console. Note: you can have various namespaces eg. in the same file or another you can have:
+
+const db_debug = require('debug')('app:db');
+
+db_debug("Database debugger on!");
+
+To display the db_debug:
+
+cmd: set DEBUG=namespace ie set DEBUG=app:db
+terminal: export DEBUG=namespace ie export DEBUG=app:db
+
+Now when we run our code we only see the debug message from the "db_debug" namespace. So guys, that's how we work with debugging in nodeJS, as you can see this is much customizable, cleaner and more powerful than using console.log(), also much more effective.
