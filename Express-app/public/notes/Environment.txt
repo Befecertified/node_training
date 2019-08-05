@@ -1,0 +1,54 @@
+An environment is simply a mode of operation, the state in which a program runs. The set of features, functionalities available in a particular mode. In software development there are majorly two environments: the development environment and the production environment.
+
+The development environment is the mode where the developer works. In the development environment the developer plays with code and all kinds of stuffs, tests out code, fix bugs and try out packages and dependencies etc. These codes have no effect when running on the real server. In the developer environment the developer tests code against a mock server or his local server. In the production environment, only code or features that are stable, needed and ready to be released to the general public are available, it contains the real-world code i.e the stable and secured code that users, clients and customers would interact with. The development environment is usually the default environment on your local server where you do your coding i.e your local machine, although you can configure your environment variables to mimic a production environment while the production environment is the web host or cloud platform on which the real, stable and secured code runs on. Now that we are done with theory let's get into some pratical stuffs.
+
+##########################################################################################################################
+
+In nodeJs the current environment is accessed through the "Process" Object. In the "Process" Object we access the "env" object and there we find the "NODE_ENV" property which holds the current node environment. This is what the code looks like: process.env.NODE_ENV; to log (print) the current environment on the console: console.log(process.env.NODE_ENV). This returns undefined by default unless you configure your environment variables to either development or production or whatever. But with express we don't have to do this, we can simply access the current environment by accessing the get method in the Express object which we usually store in an "app" variable, what I mean is this: 
+
+const express = require('express'); //this returns a function called "express()"
+const app = express(); //the express() function returns an object which we store in the "app" variable
+
+//to access the current environment
+app.get('env'); //the environment is set to 'development' by default
+
+HOW TO CHANGE THE ENVIRONMENT
+=============================
+
+We change the environment by editting the enviroment variable "NODE_ENV" on the command prompt (cmd) or terminal for mac and linux users. To do this we simply run the following command on cmd: 
+
+set NODE_ENV=env_mode 
+eg set NODE_ENV=production or 
+set NODE_ENV=development or 
+set NODE_ENV=staging etc.
+
+For terminal we use the 'export' command instead of 'set' command like so.
+
+HOW TO ENABLE FEATURES BASED ON ENVIRONMENT
+===========================================
+
+Now depending on the environment you are working on, you would want certain features to be available or not. For instance we want to log a message on the console in developement mode but not in prod (short for production), this is how we do it:
+
+if(app.get('env') === "development"){
+  console.log("Message logged in development mode");
+} // this is the express way
+
+if(process.env.NODE_ENV === "development"){
+  console.log("Message logged in development mode");
+} // this is the nodeJs way, if you go this way be sure to first set the NODE_ENV to developement on your terminal or cmd before you expect to log your message.
+
+
+
+
+
+
+
+
+
+
+
+
+
+The development environment is where the developer works, here there are all kind of features available, the developer plays with code and all kinds of dependencies and packages to make sure the code works before deploying to production. Here the developer usually plays with code and test them against his local server most times. This is the environment were bugs are fixed, new codes and features are added and tested, then when found to be stable are moved to the production environment.
+
+The production environment is the environment containing real-world code i.e the code that would be deployed on the real server that users, clients and customers would interact with, this is the working code.
