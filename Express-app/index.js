@@ -10,7 +10,6 @@ const logger = require("./logger");
 app.use(express.json());
 app.use(express.static("public"));
 
-
 if(app.get('env') === "development"){
   app.use(logger);
   app.use(morgan('tiny'));
