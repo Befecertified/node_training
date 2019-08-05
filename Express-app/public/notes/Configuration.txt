@@ -1,0 +1,100 @@
+One of the concepts of backend development is configuration. Configuration has to do with the arrangement of settings or options in a particular system. To narrow it down, configuration is all about setting the options of various part of your program like the name, password, hostname, database name etc.
+
+In nodeJS there are various packages that can help us handle configuration, with the most popular of them being "rc".
+
+npm i rc
+
+But we wouldn't be using "rc" for our configuration, instead we'll be using the "config" package in this tutorial. You can learn more about "rc" by checking the docs on npmjs.
+
+npm i config
+
+They both do the same job just a few differences. "config" has a much cleaner syntax and it gets the job done just fine. So let's get into the main stuff.
+
+First make sure you have installed "config" by running the command above, then include it in your code like you do with every other package:
+
+const config = require("config");
+
+Move on to creating a folder called "/config" in the root of your app directory. This folder would contain some configuration files which would be in json format, they would hold the data or settings for our configuration. First create a default configuration file called "default.json", make sure to follow the exact names, this is very important, missing the names would result in an error because that is how the package was written. In your "config/default.json" file just create a default name for your app, like so: 
+
+{
+  "name": "My First Node App"
+}
+
+This would be the default name of your app. This is how we can access the name with code, on your "/index.js" file where you earlier imported the config package, run this code:
+
+console.log(config.get('name')); //this will log "My First Node App" on your console.
+
+Moving on, let's say for instance we want to have some configuration settings available only in development and some others in staging and some others in production etc (remember the concepts of "environments" taught earlier), this is how we go about that. In your configuration folder "/config" create another configuration file called "development.json", this will hold the configuration settings for your app in development environment, for production, create a file called "production.json" and so on, make sure to follow the exact names, these are important as I explained earlier. Now in your "config/development.json" create a name for your app in development, like so:
+
+{
+  "name": "My Node App - Dev"
+}
+
+And in production "config/production.json" create a name for your app in production:
+
+{
+  "name": "My Node App - Prod"
+}
+
+This names would override the name you supplied earlier in your "default.json" file.
+
+Now simply run the code you had run earlier: 
+
+console.log(config.get('name')); 
+//this will log "My Node App - Dev" or "My Node App - Prod" on your console depending on the node environment you are working on (hint: process.env.NODE_ENV or in express: app.get('env') to view your current environment).
+
+In your configuration files you are free to write complex objects, for instance edit "config/development.json":
+
+{
+  "name": "My Node App - Dev",
+  "host": {
+    "name": "my custom host",
+    "mail_server": {
+      "name": "my custome mail server"
+    }
+  }
+} //and so on.
+
+To access the hostname: 
+
+config.get('host.name'); 
+//note: follow the rules of properties in json, property names cannot contain spaces eg: "my app name": "my first app" this would be erroneous when trying to access at config.get('my app name'), instead use the "snake case naming convention for such, like so: "my_app_name": "my first app", that way we can simply access it at config.get('my_app_name');
+
+Finally before we finish let us look at setting passwords in our configuration files. As you may have guessed (unless maybe you're dumb, lol, just kidding) we can't store passwords plainly in our configuration files, because they would be visible to the general public, for instance anyone that has access to our source control repository can see our passwords, other sensitive data and cause some major damage or problems, to store passwords we simply write the passwords in an environment variable and attach the name of the custom environment variable to the password property in our configuration file, this is what I mean:
+
+In cmd or terminal simply store your password in an environment variable like so:
+
+cmd: set mail_server_password=12345
+terminal: export mail_server_password=admin
+
+The reason we prefix mail_server before the word "password" in the code above is because we may have so many passwords to use in our app and adding a prefix to password tells us which particular password we are working with (it helps us not to pollute the "password" namespace).
+
+Next, we create a new file to hold custom variables in our "/config" folder called "custom-environment-variables.json", once again, follow the exact name to avoid errors, since this is the mail server password it is meant to be something like this, copy the code from "config/development.json" and add the password property below:  
+
+{
+  "name": "My Node App - Dev",
+  "host": {
+    "name": "my custom host",
+    "mail_server": {
+      "name": "my custome mail server",
+      "password": "mail_server_password" 
+      //this is a placeholder for the data stored in our environment variable: "mail_server_password" and not the actual password
+    }
+  }
+}
+
+but since we don't need the name, host.name and mail_server.name (we didn't assign environment variables for them so adding them to this file is redundant), we would delete them but be careful to retain the structure or mapping of the file so we get no errors. After deleting them, we are left with this in "config/custom-environment-variables.json" file:
+
+{
+  "host": {
+    "mail_server": {
+      "password": "mail_server_password" 
+    }
+  }
+}
+
+To access the password we simply run:
+
+config.get('host.mail_server.password') //this would print "12345" or "admin" or whatever password you set.
+
+That's all for now about configuration, don't forget to add your passwords and every other custom environment variables you set (mostly passwords) to the "config/custom-environment-variables.json" file and also maintain the right structure to avoid errors, read more about the "config" package to learn other things you can do with it. Next we'll talk about debugging.
